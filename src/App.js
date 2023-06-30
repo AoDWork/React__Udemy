@@ -1,38 +1,81 @@
-import logo from './logo.svg';
+import React, { StrictMode } from react;
 import './App.css';
 
-
-const Header = () => {
-  return <h2>Hello</h2>
+function WhoAmI (props) {
+  return(
+    <div>
+      <h1>My name is {props.name}, surname - {props.surname}</h1>
+      <a href={props.link}>My profile</a>
+    </div>
+  )
 }
 
-const Field = () => {
-  return <input placeholder="Type here" type="text" />
+
+function App() {
+  return (
+    <div className="App">
+      <WhoAmI name="John" surmane="Smith" link="facebook.com"/>
+      {/* <WhoAmI name={{firstName: "John"}} surmane="Smith" link="facebook.com"/> */}
+      <WhoAmI name="Alex" surmane="Shepard" link="google.com"/>
+    </div>
+  );
 }
 
-function Btn() {
-  const text = "Log In"
+// export { Header };
+export default App;
+
+
+// const Header = () => {
+//   return <h2>Hello</h2>
+// }
+
+// const Field = () => {
+//   const holder = "Enter here"
+//   const styledField = {
+//     width: '300px'
+//   }
+//   return <input
+//     placeholder={holder}
+//     type="text"
+//     style={styledField} />
+// }
+
+// const Field extends React.Component {
+//   render() {
+//     const holder = "Enter here"
+//     const styledField = {
+//       width: '300px'
+//     }
+//     return <input 
+//             placeholder={holder} 
+//             type="text" 
+//             style={styledField}/>
+//   }
+// }
+
+// function Btn() {
+//   const text = "Log In"
+//   const logged = true
   // const res = () => {
   //   return "Log In"
   // }
   // const p = <p>Log In</p>
-  const logged = true
 
   // return  <button>{ p }</button>
   // return  <button>{ 3+4 }</button>
   // return  <button>{res()}</button>
 
-  return  <button>{ logged ? "Enter" : text }</button>
-}
+//   return <button>{logged ? "Enter" : text}</button>
+// }
 
-function App() {
-  return (
-    <div className="App">
-      <Header />
-      <Field />
-      <Btn />
-    </div>
-  );
-}
-
-export default App;
+// function App() {
+//   return (
+//     <div className="App">
+//       <StrictMode>
+//         <Header />
+//       </StrictMode>
+//       <Field />
+//       <Btn />
+//     </div>
+//   );
+// }
