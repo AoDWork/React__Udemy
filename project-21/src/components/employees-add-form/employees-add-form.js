@@ -16,7 +16,8 @@ class EmployeesAddForm extends Component {
         })
     }
 
-    onSubmit = (e) => {
+    /* мое решение
+    onSubmit = (e) => {  
         e.preventDefault();
         if(this.state.name.length >= 3 && this.state.salary.length >= 1) {
             this.props.onAdd(this.state.name, this.state.salary);
@@ -25,7 +26,21 @@ class EmployeesAddForm extends Component {
                 salary: ''
             })
         } 
+    } 
+    */
+
+    //решение автора
+    onSubmit = (e) => {
+        e.preventDefault();
+        if (this.state.name.length < 3 || !this.state.salary) return;
+        this.props.onAdd(this.state.name, this.state.salary);
+        this.setState({
+            name: '',
+            salary: ''
+        })
     }
+
+
 
     render() {
         const { name, salary } = this.state

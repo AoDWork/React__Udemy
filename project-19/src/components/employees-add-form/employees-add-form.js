@@ -19,13 +19,25 @@ class EmployeesAddForm extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         if(this.state.name.length >= 3 && this.state.salary.length >= 1) {
-            this.props.onAdd(this.state.name, this.state.salary);
+            this.props.onAdd(this.state.name, this.state.salary)
             this.setState({
                 name: '',
                 salary: ''
             })
         } 
     }
+
+    //Решение от автора
+    // onSubmit = (e) => {
+    //     e.preventDefault();
+        // Можно еще и сообщения добавлять, подсветку, атрибуты minlength и тд.
+    //     if (this.state.name.length < 3 || !this.state.salary) return;
+    //     this.props.onAdd(this.state.name, this.state.salary);
+    //     this.setState({
+    //         name: '',
+    //         salary: ''
+    //     })
+    // }
 
     render() {
         const { name, salary } = this.state
