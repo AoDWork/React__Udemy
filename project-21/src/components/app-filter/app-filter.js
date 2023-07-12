@@ -13,7 +13,7 @@ const AppFilter = (props) => {
             </button>
             <button type="button"
                     className="btn btn-outline-light"
-                    onClock={props.filterOnSalary}>
+                    /*onClick={props.filterOnSalary}*/>
                     З/П больше 1000$
             </button>
         </div>

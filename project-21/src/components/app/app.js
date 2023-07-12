@@ -115,19 +115,19 @@ class App extends Component {
     const totalEmloyee = () => this.state.data.length
     const emloyeeOnRise = () => this.state.data.filter(elem => elem.rise).length
     let visibleData = this.searchEmployee(data, term)
-    const filteredOnSalary = this.filterOnSalary(data)
+    // const filteredOnSalary = this.filterOnSalary(data)
 
-    switch (filter) {
-      case "salary":
-        visibleData = this.filterOnSalary(data)
-        break;
-      case 'rise':
-        visibleData = this.filterOnRise(data)
-        break;
-      default:
-        visibleData = this.searchEmployee(data, term)
-        break;
-    }
+    // switch (filter) {
+    //   case "salary":
+    //     visibleData = this.filterOnSalary(data)
+    //     break;
+    //   case 'rise':
+    //     visibleData = this.filterOnRise(data)
+    //     break;
+    //   default:
+    //     visibleData = this.searchEmployee(data, term)
+    //     break;
+    // }
 
 
 
@@ -138,7 +138,7 @@ class App extends Component {
 
         <div className="search-panel">
           <SearchPanel onUpdateSearch={this.onUpdateSearch} />
-          <AppFilter filterOnSalary={filterOnSalary} />
+          <AppFilter /*filterOnSalary={filterOnSalary}*/ />
         </div>
 
         <EmployeesList
