@@ -106,18 +106,42 @@ class App extends Component {
     this.setState({ term: term }) // = this.setState({term}) идентичные записи
   }
 
-  filterOnSalary = (items) => {
-    return items.filter(item => item.salary > 1000)
+  // filterOnSalary = (items) => {
+  //   return items.filter(item => item.salary > 1000)
+  // }
+
+  // filterOnRise = (items) => {
+  //   return items.filter(item => item.rise )
+  // }
+
+  // onSetFilter = (filter) => {
+  //   this.setState({filter})
+  // }
+
+  filterPost = (items, filter) => {
+    switch (filter) {
+      case 'rise':
+        return items.filter(item => item.rise)
+      case 'moreThen1000':
+        return items.filter(item => item.salary > 1000)
+      default:
+        return items
+    }
+  }
+
+  onFilterSelect = (filter) => {
+    this.setState({filter})
   }
 
   render() {
-    const { data, term } = this.state
+    const { data, term, filter } = this.state
     const totalEmloyee = () => this.state.data.length
     const emloyeeOnRise = () => this.state.data.filter(elem => elem.rise).length
-    let visibleData = this.searchEmployee(data, term)
-    // const filteredOnSalary = this.filterOnSalary(data)
+    let visibleData = this.filterPost(this.searchEmployee(data, term), filter)
 
-    // switch (filter) {
+    // let visibleData
+
+    // switch (this.filter) {
     //   case "salary":
     //     visibleData = this.filterOnSalary(data)
     //     break;
@@ -129,8 +153,6 @@ class App extends Component {
     //     break;
     // }
 
-
-
     return (
       <div className="app">
         <AppInfo totalEmloyee={totalEmloyee}
@@ -138,7 +160,9 @@ class App extends Component {
 
         <div className="search-panel">
           <SearchPanel onUpdateSearch={this.onUpdateSearch} />
-          <AppFilter /*filterOnSalary={filterOnSalary}*/ />
+          <AppFilter filter={filter}
+            onFilterSelect = {this.onFilterSelect}
+            /*onSetFilter={onSetFilter}*/ />
         </div>
 
         <EmployeesList
