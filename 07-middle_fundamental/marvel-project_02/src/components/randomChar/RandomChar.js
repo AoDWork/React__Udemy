@@ -10,7 +10,7 @@ import mjolnir from '../../resources/img/mjolnir.png';
 class RandomChar extends Component {
     constructor(props) {
         super(props)
-        this.marvelService()
+        this.updateChar()
     }
 
     state = {
@@ -46,15 +46,14 @@ class RandomChar extends Component {
 
     render() {
         const {char, loading, error} = this.state
-        // thumbnail = thumbnail ? thumbnail : "There are no description for this character"
         const spinner = loading  ? <Spinner /> : null
         const errorMessage = error ? <ErrorMessage /> : null
         const content = !( loading || error) ? <View char={char} /> : null
 
         return (
             <div className="randomchar">
-               { spinner }
                { errorMessage }
+               { spinner }
                { content }
                 <div className="randomchar__static">
                     <p className="randomchar__title">
@@ -76,6 +75,7 @@ class RandomChar extends Component {
 
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki} = char
+    const descriptionRes = description ? description : "There is no description for this character"
 
     return (
         <div className="randomchar__block">
@@ -83,7 +83,7 @@ const View = ({char}) => {
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">
-                    {description}
+                    {descriptionRes}
                 </p>
                 <div className="randomchar__btns">
                     <a href={homepage} className="button button__main">
