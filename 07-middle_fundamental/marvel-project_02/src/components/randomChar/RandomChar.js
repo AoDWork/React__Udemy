@@ -42,7 +42,7 @@ class RandomChar extends Component {
 
     updateChar = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000)
-        this.onCharLoading
+        this.onCharLoading()
         this.marvelService
             .getCharacter(id)
             .then(this.onCharLoaded)
@@ -81,7 +81,7 @@ class RandomChar extends Component {
 
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki} = char
-    const descriptionRes = description ? description : "There is no description for this character"
+    // const descriptionRes = description ? description : "There is no description for this character"
     const thumbnailImg = thumbnail.includes('not') 
                         ? <img src={thumbnail} style={{objectFit:"contain"}} alt="Random character" className="randomchar__img"/> 
                         : <img src={thumbnail} alt="Random character" className="randomchar__img"/>
@@ -92,7 +92,7 @@ const View = ({char}) => {
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">
-                    {descriptionRes}
+                    {description}
                 </p>
                 <div className="randomchar__btns">
                     <a href={homepage} className="button button__main">
