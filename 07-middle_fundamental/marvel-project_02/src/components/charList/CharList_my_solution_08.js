@@ -6,39 +6,42 @@ import MarvelService from '../../services/MarvelSevices';
 import './charList.scss';
 
 class CharList extends Component {
-
     state = {
         charList: [],
+        quantity: 9,
         loading: true,
-        error: false,
-        newItemsloading: false
+        error: false
     }
     
     marvelService = new MarvelService();
 
     componentDidMount() {
-        this.onRequest()
+        this.updateCharList()
     }
 
-    onRequest = (offset) => {
-        onCharListLoading()
-        this.marvelService.getAllCharacters(offset)
+    componentDidUpdate(prevProps, prevState) {
+        console.log(prevProps, prevState)
+        if (prevState.quantity !== this.state.quantity) {
+            this.updateCharList()
+        }
+    }
+
+    updateCharList = () => {
+        this.marvelService.getAllCharacters(this.state.quantity)
         .then(this.onCharListLoaded)
         .catch(this.onError)
+    } 
+
+    onLoadMore = () => {
+        this.setState({quantity: this.state.quantity + 9,
+                        loading: true})
     }
 
-    onCharListLoading = () => {
+    onCharListLoaded = (charList) => {
         this.setState({
-            newItemsloading: true
+            charList,
+            loading: false
         })
-    }
-
-    onCharListLoaded = (newCharList) => {
-        this.setState( ({charList}) =>
-            ({charList: [ ...charList, ...newCharList],
-            loading: false,
-            newItemsloading: false
-        }))
     }
 
     onError = () => {
@@ -88,7 +91,7 @@ class CharList extends Component {
                 {spinner}
                 {content}
                 <button className="button button__main button__long">
-                    <div className="inner">load more</div>
+                    <div className="inner" onClick={this.onLoadMore}>load more</div>
                 </button>
             </div>
         )

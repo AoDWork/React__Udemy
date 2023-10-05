@@ -3280,6 +3280,163 @@
 
 {/*    ====    08. Пагинация данных (дозагрузка персонажей)     ====
  
+    Будем реализовывать подгрузку новых карточек по клику на кнопке. Попробую сначала сделать сам, так как Иван говорит что все
+        знания у нас уже есть. 
+        
+
+        
+     
+    Moe решение
+    Так как мы запрашиваем данные через параметр limit, то можно или добавлять туда с каждым кликом еще 9 и запрашивать
+        снова занося в массив или чтоб сэкономить количество трафика можно изменять offset на 9 и получать новые 9
+        персонажей тогда новые нужно будет добавлять к старым в массив для вывода списка. Сделаю через limit.
+
+            class CharList extends Component {
+                state = {
+                    charList: [],
+                    quantity: 9,
+                    loading: true,
+                    error: false
+                }
+                
+                marvelService = new MarvelService();
+
+                componentDidMount() {
+                    this.updateCharList()
+                }
+
+                componentDidUpdate(prevProps, prevState) {
+                    console.log(prevProps, prevState)
+                    if (prevState.quantity !== this.state.quantity) {
+                        this.updateCharList()
+                    }
+                }
+
+                updateCharList = () => {
+                    this.marvelService.getAllCharacters(this.state.quantity)
+                    .then(this.onCharListLoaded)
+                    .catch(this.onError)
+                } 
+
+                onLoadMore = () => {
+                    this.setState({quantity: this.state.quantity + 9,
+                                    loading: true})
+                }
+
+                onCharListLoaded = (charList) => {
+                    this.setState({
+                        charList,
+                        loading: false
+                    })
+                }
+
+                ...
+
+                    <div className="inner" onClick={this.onLoadMore}>load more</div>
+
+                кажется идет лишний запрос
+
+        
+        В services добавил прием лимита и его динамику в запросе
+
+            getAllCharacters = async (quantity = 9) => {
+                const res = await this.getResource(`${this._apiBase}characters?limit=${quantity}&offset=210&${this._apiKey}`)
+    
+
+
+
+    Урок.
+    При клике на кнопку должен уходить запрос на загрузку следующих 9 персонажей, тоесть в сервисес offset должен меняться. Новые
+        данные должны объединиться со старыми и отрисовать интерфейс, так как key у нас устанавливаетс по уникальному id то у нас 
+        должны обновиться только новые элементы.
+
+
+        В service, вынесем значение по умолчанию в отдельную переменную, для запроса будем использовать offset который 
+            пришел, а если его нету тогде будет использоваться офсет по умолчанию.
+
+            _baseOffset = 210
+
+            getAllCharacters = async (offset = this._baseOffset) => {
+                const res = await this.getResource(`${this._apiBase}characters?limit=${quantity}&offset=${offset}&${this._apiKey}`)
+
+                
+                
+        В CharList, вынесем запрос в один метод и в componentDidMount будем использовать его без аргумента, а при клике уже будем
+        подствалять аргумент который нужен.
+
+            componentDidMount() {
+                this.onRequest()
+            }
+
+            onRequest = (offset) => {
+                this.marvelService.getAllCharacters(offset)
+                .then(this.onCharListLoaded)
+                .catch(this.onError)
+            }
+
+        
+        для визуального отображения запроса будем использовать стили кнопки, при тправке запроса будем делать кнопку disabled, а
+        при получении данных будем ее разблокировать, таким образом еще предотвращая многократное нажатие на кнопку юзером. Спинер
+        не подходит так как я так понимаю Иван хочет чтобы старые персонажи оставались видимыми - не перегружались, и тогда спинер
+        нужно было бы вставлять между ними и кнопкой но это будет не просто сделать и будет некрасиво, поэтому остановились на
+        блокировании кнопки. 
+        Для отслеживания этого состояния введем дополнительное свойство в state - newItemsloading: false, 
+        по умолчанию false потому что обычный loading показывается при первичной загрузке, а это свойство будет меняться при вызове
+        onRequest, создадим еще метод для переключения этого состояния и будем вызывать его перед запросом в onRequest. 
+        При первом запуске получится что кнопка будет блокироваться так как вызоветься метод onRequest и нужно будет переключить
+        свойство в false, это сделаем там же где и обычный loading в onCharListLoaded.
+
+            componentDidMount() {
+                this.onRequest()
+            }
+
+            onRequest = (offset) => {
+                onCharListLoading()
+                this.marvelService.getAllCharacters(offset)
+                .then(this.onCharListLoaded)
+                .catch(this.onError)
+            }
+
+            onCharListLoading = () => {
+                this.setState({
+                    newItemsloading: true
+                })
+            }
+
+            onCharListLoaded = (charList) => {
+                this.setState({
+                    charList,
+                    loading: false,
+                    newItemsloading: false
+                })
+            }
+
+
+        Теперь нужно сделать объединение новых данных со старыми. Так как при запросе getAllCharacters полученные данные попадают в
+        then(this.onCharListLoaded) - и там они заносятся в setState - charList, нам нужно новые данные туда поместить не затерев
+        старые, для этого нужно старые вытянуть из state. Так как новый state зависит от старого, нужно использовать коллбек ф-ю
+        из которой вернеться уже готовый объект с объединенным массивом, а старый массив вытащим в этой же ф-и деструктуризировав из
+        state который передается в коллбек ф-ю, и также через деструктуризацию совместим старый массив с новым. Новый массив 
+        переназовем чтобы не путаться.
+
+            onCharListLoaded = (newCharList) => {
+                this.setState( ({charList}) =>
+                    ({charList: [ ...charList, ...newCharList],
+                    loading: false,
+                    newItemsloading: false
+                }))
+            }
+
+            12-00
+
+
+
+
+
+
+
+
+
 */}
 
 {/*    ====    09. Проверка типов с помощью PropTypes     ====

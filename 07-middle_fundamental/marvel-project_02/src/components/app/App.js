@@ -2,6 +2,7 @@ import { Component } from "react";
 import AppHeader from "../appHeader/AppHeader";
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
+// import CharList_my_solution_08 from "../charList/CharList_my_solution_08";
 import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 
@@ -29,6 +30,7 @@ class App extends Component {
                     <div className="char__content">
                         <ErrorBoundary>
                             <CharList onCharSelected={this.onCharSelected} />
+                            {/* <CharList_my_solution_08 onCharSelected={this.onCharSelected} /> */}
                         </ErrorBoundary>
                         <ErrorBoundary>
                             <CharInfo charId={this.state.selectedChar} />
