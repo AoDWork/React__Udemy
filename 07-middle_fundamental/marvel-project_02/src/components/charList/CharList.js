@@ -1,9 +1,10 @@
 import { Component } from 'react'
 import Spinner from '../spinner/Spinner'
-import ErrorMessage from '../errorMessage/ErrorMessage';
-import MarvelService from '../../services/MarvelSevices';
+import ErrorMessage from '../errorMessage/ErrorMessage'
+import MarvelService from '../../services/MarvelSevices'
+import PropTypes from 'prop-types'
 
-import './charList.scss';
+import './charList.scss'
 
 class CharList extends Component {
 
@@ -105,6 +106,10 @@ class CharList extends Component {
             </div>
         )
     }
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func
 }
 
 export default CharList;

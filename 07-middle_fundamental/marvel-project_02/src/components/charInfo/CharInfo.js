@@ -1,8 +1,9 @@
-import { Component } from 'react';
+import { Component } from 'react'
+import PropTypes from 'prop-types'
 
-import MarvelService from '../../services/MarvelSevices';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
+import MarvelService from '../../services/MarvelSevices'
+import Spinner from '../spinner/Spinner'
+import ErrorMessage from '../errorMessage/ErrorMessage'
 import Skeleton from '../skeleton/Skeleton'
 
 import './charInfo.scss';
@@ -85,9 +86,9 @@ const View = ({ char }) => {
     const { name, description, thumbnail, homepage, wiki, comics } = char
     const noComics = comics.length === 0 ? <li>This character is not present in the comics</li> : null
     const comicsList = comics.slice(0, 10)
-    let imgStyle = {'objectFit' : 'cover'};
+    let imgStyle = { 'objectFit': 'cover' };
     if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
-        imgStyle = {'objectFit' : 'unset'};
+        imgStyle = { 'objectFit': 'unset' };
     }
 
     return (
@@ -112,16 +113,20 @@ const View = ({ char }) => {
             <div className="char__comics">Comics:</div>
             <ul className="char__comics-list">
                 {noComics}
-                {   
+                {
                     comicsList.map((item, i) => {
                         return <li key={i} className="char__comics-item">
-                                    {item.name}
-                                </li>
+                            {item.name}
+                        </li>
                     })
                 }
             </ul>
         </>
     )
+}
+
+CharInfo.propTypes = {
+    charId: PropTypes.number
 }
 
 export default CharInfo;
